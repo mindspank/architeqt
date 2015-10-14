@@ -3,7 +3,7 @@ var Promise = require('bluebird');
 var METHODS = require('./lib/assemble-blueprint');
 
 
-function applyBlueprintTo(applist, blueprint, config) {
+function applyTo(applist, blueprint, config) {
 	
 	var bp = {
 		story: blueprint.stories,
@@ -56,5 +56,5 @@ function apply(appid, blueprint, config) {
 }
 
 module.exports = {
-	to: applyBlueprintTo
+	applyTo: applyTo
 };
