@@ -1,0 +1,7 @@
+node_modules/
+certs/*.pem
+*.log
+logs
+pids
+*.pid
+*.seed
