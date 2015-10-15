@@ -53,7 +53,7 @@ function apply(appid, blueprint, config) {
 		.then(function() {
 			return $.app.saveObjects()
 		})
-}
+};
 
 module.exports = {
 	applyTo: applyTo
