@@ -10,10 +10,7 @@ function applyTo(applist, blueprint, config) {
 		return cur.then(function() {
 			return apply(next, blueprint, config)
 		});
-	}, Promise.resolve()).then(function() {
-		console.log('all executed')
-	});
-
+	}, Promise.resolve())
 };
 
 function apply(appid, blueprint, config) {
