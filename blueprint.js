@@ -1,20 +1,14 @@
 var qsocks = require('qsocks');
 var Promise = require('bluebird');
+var _getBlueprint = require('./lib/get-blueprint');
 var METHODS = require('./lib/assemble-blueprint');
+var resolveDeletions = require('./lib/resolve-deletions');
 
-
-function applyTo(applist, blueprint, config) {
-	
-	var bp = {
-		story: blueprint.stories,
-		sheet: blueprint.sheets,
-		dimension: blueprint.dimensions,
-		measure: blueprint.measures
-	}
-
+function _applyTo(applist, blueprint, config) {
+		
 	return applist.reduce(function(cur, next) {
 		return cur.then(function() {
-			return apply(next, bp, config)
+			return apply(next, blueprint, config)
 		});
 	}, Promise.resolve()).then(function() {
 		console.log('all executed')
@@ -25,10 +19,17 @@ function applyTo(applist, blueprint, config) {
 function apply(appid, blueprint, config) {
 	config.appname = appid;
 	var $ = {};
-		
+	
+	var bp = {
+		story: blueprint.stories,
+		sheet: blueprint.sheets,
+		dimension: blueprint.dimensions,
+		measure: blueprint.measures
+	};
+	
 	return qsocks.Connect(config)
 		.then(function(global) {
-			return global.openDoc(appid, '', '', '', true)
+			return global.openDoc(appid, '', '', '', false)
 		})
 		.then(function(app) {
 			return $.app = app;
@@ -38,23 +39,27 @@ function apply(appid, blueprint, config) {
 		})
 		.then(function(info) {
 			return info.qInfos.filter(function(obj) {
-				return Object.keys(blueprint).indexOf(obj.qType) != -1;
+				return Object.keys(bp).indexOf(obj.qType) != -1;
 			}).map(function(zip) {
 				return zip.qId;
 			});
 		})
 		.then(function(appObjectList) {
-			return Promise.all(Object.keys(blueprint).map(function(method) {
-				return blueprint[method].map(function(c) {
+			return Promise.all(Object.keys(bp).map(function(method) {
+				return bp[method].map(function(c) {
 					return METHODS[method]($.app, c, appObjectList)
 				})
 			}))
 		})
 		.then(function() {
-			return $.app.saveObjects()
+			return resolveDeletions($.app, blueprint);
+		})
+		.then(function() {
+			return config.host === 'localhost' || '127.0.0.1' ? $.app.doSave() : $.app.saveObjects()
 		})
 };
 
 module.exports = {
-	applyTo: applyTo
+	applyTo: _applyTo,
+	getBlueprint: _getBlueprint
 };

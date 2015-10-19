@@ -1,13 +1,17 @@
 var qsocks = require('qsocks');
-var getBlueprint = require('./lib/get-blueprint');
-var config = require('./config');
-var blueprint = require('./blueprint')
+//var config = require('./config');
+var bp = require('./blueprint')
+var c = {
+	host: '127.0.0.1',
+	isSecure: false,
+	port: 4848
+}
 
-getBlueprint('88503d1b-9386-436c-9c0e-c38186d43c3a', config.engine)
-.then(function(blueprint) {
-	return blueprint.applyTo(['61740c55-16f2-4db2-90d4-891d5975395e', '61740c55-16f2-4db2-90d4-891d5975395e'], blueprint, config.engine)
-})
-.catch(function(error) {
-	console.log(error)
-})
-.done()
+bp.getBlueprint('Blueprint', c)
+	.then(function (blueprint) {
+		return bp.applyTo(['Child'], blueprint, c)
+	})
+	.catch(function (error) {
+		console.log(error)
+	})
+	.done()
