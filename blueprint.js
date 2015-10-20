@@ -1,10 +1,10 @@
 var qsocks = require('qsocks');
 var Promise = require('bluebird');
-var _getBlueprint = require('./lib/get-blueprint');
+var getBlueprint = require('./lib/get-blueprint');
 var METHODS = require('./lib/assemble-blueprint');
 var resolveDeletions = require('./lib/resolve-deletions');
 
-function _applyTo(applist, blueprint, config) {
+function applyTo(applist, blueprint, config) {
 		
 	return applist.reduce(function(cur, next) {
 		return cur.then(function() {
@@ -24,7 +24,8 @@ function apply(appid, blueprint, config) {
 		story: blueprint.stories,
 		sheet: blueprint.sheets,
 		dimension: blueprint.dimensions,
-		measure: blueprint.measures
+		measure: blueprint.measures,
+		masterobject: blueprint.masterobjects
 	};
 	
 	return qsocks.Connect(config)
@@ -39,7 +40,7 @@ function apply(appid, blueprint, config) {
 		})
 		.then(function(info) {
 			return info.qInfos.filter(function(obj) {
-				return Object.keys(bp).indexOf(obj.qType) != -1;
+				return Object.keys(bp).indexOf(obj.qType) !== -1;
 			}).map(function(zip) {
 				return zip.qId;
 			});
@@ -60,6 +61,6 @@ function apply(appid, blueprint, config) {
 };
 
 module.exports = {
-	applyTo: _applyTo,
-	getBlueprint: _getBlueprint
+	applyTo: applyTo,
+	getBlueprint: getBlueprint
 };

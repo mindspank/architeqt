@@ -7,11 +7,11 @@ var c = {
 	port: 4848
 }
 
-bp.getBlueprint('Blueprint', c)
-	.then(function (blueprint) {
-		return bp.applyTo(['Child'], blueprint, c)
-	})
-	.catch(function (error) {
-		console.log(error)
-	})
-	.done()
+bp.getBlueprint('Blueprint 2', c)
+.then(function (blueprint) {
+	return bp.applyTo(['Child Test'], blueprint, c)
+})
+.catch(function (error) {
+	console.log(error)
+})
+.done()
