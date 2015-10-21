@@ -9,7 +9,7 @@ var c = {
 
 bp.getBlueprint('Blueprint 2', c)
 .then(function (blueprint) {
-	return bp.applyTo(['Child Test'], blueprint, c)
+	return bp.applyTo(['Child Snapshot'], blueprint, c)
 })
 .catch(function (error) {
 	return console.log(error)

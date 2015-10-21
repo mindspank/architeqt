@@ -22,7 +22,8 @@ function apply(appid, blueprint, config) {
 		sheet: blueprint.sheets,
 		dimension: blueprint.dimensions,
 		measure: blueprint.measures,
-		masterobject: blueprint.masterobjects
+		masterobject: blueprint.masterobjects,
+		snapshot: blueprint.snapshots
 	};
 		
 	return qsocks.Connect(config).then(function(global) {
@@ -45,8 +46,8 @@ function apply(appid, blueprint, config) {
 		})
 		.then(function(appObjectList) {
 			return Promise.all(Object.keys(bp).map(function(method) {
-				return bp[method].map(function(c) {
-					return METHODS[method]($.app, c, appObjectList)
+				return bp[method].map(function(definition) {
+					return METHODS[method]($.app, definition, appObjectList)
 				})
 			}))
 		})
