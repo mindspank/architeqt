@@ -12,6 +12,6 @@ bp.getBlueprint('Blueprint 2', c)
 	return bp.applyTo(['Child Test'], blueprint, c)
 })
 .catch(function (error) {
-	console.log(error)
+	return console.log(error)
 })
 .done()

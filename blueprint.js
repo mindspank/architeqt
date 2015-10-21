@@ -10,7 +10,7 @@ function applyTo(applist, blueprint, config) {
 		return cur.then(function() {
 			return apply(next, blueprint, config)
 		});
-	}, Promise.resolve())
+	}, Promise.resolve());
 };
 
 function apply(appid, blueprint, config) {
@@ -24,10 +24,11 @@ function apply(appid, blueprint, config) {
 		measure: blueprint.measures,
 		masterobject: blueprint.masterobjects
 	};
-	
-	return qsocks.Connect(config)
-		.then(function(global) {
-			return global.openDoc(appid, '', '', '', false)
+		
+	return qsocks.Connect(config).then(function(global) {
+			return $.global = global;
+		}).then(function() {
+			return $.global.openDoc(appid, '', '', '', false)
 		})
 		.then(function(app) {
 			return $.app = app;
@@ -54,7 +55,10 @@ function apply(appid, blueprint, config) {
 		})
 		.then(function() {
 			return config.host === 'localhost' || '127.0.0.1' ? $.app.doSave() : $.app.saveObjects()
-		})
+		}).then(function() {
+			$.global.connection.ws.terminate()
+			return $ = null;
+		}).done()
 };
 
 module.exports = {
