@@ -3,11 +3,11 @@ var config = require('./config');
 var bp = require('./blueprint')
 
 
-bp.getBlueprint('359b3fec-4a30-4f5c-a0ff-72a931042f07', config.engine)
+bp.getBlueprint('f97c71d8-301c-429a-9992-c0af8044dec4', config.engine)
 .then(function (blueprint) {
-	return bp.applyTo(['92587096-5119-44a0-8c27-e0576a17934b'], blueprint, config.engine)
+	return bp.applyTo(['82050482-cafa-40d3-8468-df640c98b7c2'], blueprint, config.engine)
 })
 .catch(function (error) {
-	return console.log(error)
+	console.log(error)
 })
 .done()

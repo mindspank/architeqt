@@ -4,13 +4,11 @@ var getBlueprint = require('./lib/get-blueprint');
 var METHODS = require('./lib/assemble-blueprint');
 var resolveDeletions = require('./lib/resolve-deletions');
 
-function applyTo(applist, blueprint, config) {
-		
-	return applist.reduce(function(cur, next) {
-		return cur.then(function() {
-			return apply(next, blueprint, config)
-		});
-	}, Promise.resolve());
+function applyTo(applist, blueprint, config) {	
+	return Promise.each(applist, function(app) {
+		return apply(app, blueprint, config)
+	})
+	.done()
 };
 
 function apply(appid, blueprint, config) {
@@ -40,29 +38,30 @@ function apply(appid, blueprint, config) {
 				return zip.qId;
 			});
 		})
-		.then(function(appObjectList) {		
+		.then(function(appObjectList) {
 			return Promise.each(METHODS_MAP, function(method) {
 				if (blueprint[method] && blueprint[method].length) {
-					return Promise.all(blueprint[method].map(function(definition) {
+					return Promise.each(blueprint[method], function(definition) {
 						return METHODS[method]($.app, definition, appObjectList)
-					}))					
+					})		
 				} else {
 					return Promise.resolve();					
 				}
 			})
 		})
-		.then(function() {
+		/*.then(function() {
 			return resolveDeletions($.app, blueprint);
-		})
+		})*/
 		.then(function() {
 			return $.app.saveObjects()
 		}).then(function() {
 			// Clean up and free up connections.
-			return $ = null && $.global.connection.ws.terminate()
+			$.global.connection.ws.terminate()
+			return $ = null;
 		})
-		.catch(function(err) {
-			return console.log(err)
-		}).done()
+		.catch(function(error) {
+			console.log(error)
+		}).done();
 };
 
 module.exports = {
