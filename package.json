@@ -12,7 +12,7 @@
     "bluebird": "^2.10.2",
     "extend": "^3.0.0",
     "qrs": "^1.0.5",
-    "qsocks": "^2.1.3",
+    "qsocks": "^2.1.5",
     "serializeapp": "^1.0.0"
   }
 }

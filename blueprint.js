@@ -8,10 +8,6 @@ function applyTo(applist, blueprint, config) {
 	return Promise.each(applist, function(app) {
 		return apply(app, blueprint, config)
 	})
-	.catch(function(error) {
-		console.log(error)
-	})
-	.done()
 };
 
 function apply(appid, blueprint, config) {
@@ -43,16 +39,11 @@ function apply(appid, blueprint, config) {
 				});
 			})
 			.then(function(appObjectList) {
-				return Promise.each(METHODS_MAP, function(method) {
-					if (blueprint[method] && blueprint[method].length) {
-						return Promise.each(blueprint[method], function(definition) {
-							console.log(METHODS[method])
+				return Promise.all(METHODS_MAP.map(function(method) {
+						return Promise.all(blueprint[method].map(function(definition) {
 							return METHODS[method]($.app, definition, appObjectList)
-						})		
-					} else {
-						return Promise.resolve();					
-					}
-				})
+						}))		
+				}))
 			})
 			.then(function() {
 				return resolveDeletions($.app, blueprint);
