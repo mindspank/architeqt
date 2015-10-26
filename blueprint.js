@@ -15,21 +15,17 @@ function applyTo(applist, blueprint, config) {
 
 function apply(appid, blueprint, config) {
 	config.appname = appid;
+	
+	// qsocks content cache.
 	var $ = {};
 	
-	var bp = {
-		story: blueprint.stories,
-		sheet: blueprint.sheets,
-		dimension: blueprint.dimensions,
-		measure: blueprint.measures,
-		masterobject: blueprint.masterobjects,
-		snapshot: blueprint.snapshots
-	};
-		
+	var SUPPORTED_OBJECT_TYPES = ['story', 'sheet', 'measure', 'dimension', 'masterobject', 'snapshot'];
+	var METHODS_MAP = ['sheets', 'measures', 'dimensions', 'masterobjects', 'snapshots', 'stories'];
+			
 	return qsocks.Connect(config).then(function(global) {
 			return $.global = global;
 		}).then(function() {
-			return $.global.openDoc(appid, '', '', '', false)
+			return $.global.openDoc(appid, '', '', '', true);
 		})
 		.then(function(app) {
 			return $.app = app;
@@ -39,26 +35,33 @@ function apply(appid, blueprint, config) {
 		})
 		.then(function(info) {
 			return info.qInfos.filter(function(obj) {
-				return Object.keys(bp).indexOf(obj.qType) !== -1;
+				return SUPPORTED_OBJECT_TYPES.indexOf(obj.qType) !== -1;
 			}).map(function(zip) {
 				return zip.qId;
 			});
 		})
-		.then(function(appObjectList) {
-			return Promise.all(Object.keys(bp).map(function(method) {
-				return bp[method].map(function(definition) {
-					return METHODS[method]($.app, definition, appObjectList)
-				})
-			}))
+		.then(function(appObjectList) {		
+			return Promise.each(METHODS_MAP, function(method) {
+				if (blueprint[method] && blueprint[method].length) {
+					return Promise.all(blueprint[method].map(function(definition) {
+						return METHODS[method]($.app, definition, appObjectList)
+					}))					
+				} else {
+					return Promise.resolve();					
+				}
+			})
 		})
 		.then(function() {
 			return resolveDeletions($.app, blueprint);
 		})
 		.then(function() {
-			return config.host === 'localhost' || '127.0.0.1' ? $.app.doSave() : $.app.saveObjects()
+			return $.app.saveObjects()
 		}).then(function() {
-			$.global.connection.ws.terminate()
-			return $ = null;
+			// Clean up and free up connections.
+			return $ = null && $.global.connection.ws.terminate()
+		})
+		.catch(function(err) {
+			return console.log(err)
 		}).done()
 };
 

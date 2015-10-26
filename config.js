@@ -25,8 +25,8 @@ var qrsconfig = {
 	headers: {
 		'X-Qlik-User': 'UserDirectory=Internal;UserId=sa_repository'
 	},
-	key: fs.readFileSync('client_key.pem'),
-	cert: fs.readFileSync('client.pem')
+	key: certs.key,
+	cert: certs.cert
 }
 
 module.exports = {
