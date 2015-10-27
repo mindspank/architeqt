@@ -1,8 +1,12 @@
 var qsocks = require('qsocks');
-var QRS = require('qrs');
 
 var config = require('./config');
 var bp = require('./blueprint');
+
+var QRS = require('qrs');
+var qrs = new QRS(config.qrs);
+
+
 
 
 

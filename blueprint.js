@@ -40,9 +40,9 @@ function apply(appid, blueprint, config) {
 			})
 			.then(function(appObjectList) {
 				return Promise.all(METHODS_MAP.map(function(method) {
-						return Promise.all(blueprint[method].map(function(definition) {
-							return METHODS[method]($.app, definition, appObjectList)
-						}))		
+					return Promise.all(blueprint[method].map(function(definition) {
+						return METHODS[method]($.app, definition, appObjectList)
+					}))		
 				}))
 			})
 			.then(function() {

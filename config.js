@@ -6,6 +6,11 @@ var certs = {
 	ca: fs.readFileSync('./certs/root.pem')
 }
 
+var qmcConfig = {
+	blueprintProp: 'Template',
+	childAppProp: 'UseTemplate'
+}
+
 var engineconfig = {
 	host: 'usrad-akl.qliktech.com',
 	isSecure: true,
@@ -20,16 +25,18 @@ var engineconfig = {
 
 var qrsconfig = {
 	host: 'usrad-akl.qliktech.com',
+	authentication: 'certificates',
 	useSSL: true,
-	port: '4242',
-	headers: {
-		'X-Qlik-User': 'UserDirectory=Internal;UserId=sa_repository'
-	},
-	key: certs.key,
-	cert: certs.cert
+	port: 4242,
+	headerKey: 'X-Qlik-User',
+	headerValue: 'UserDirectory=Internal;UserId=sa_repository',
+	key: './certs/client_key.pem',
+	cert: './certs/client.pem',
+	ca: './certs/root.pem'
 }
 
 module.exports = {
 	engine: engineconfig,
-	qrs: qrsconfig
+	qrs: qrsconfig,
+	qmc: qmcConfig
 };
