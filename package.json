@@ -10,7 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "bluebird": "^2.10.2",
+    "bunyan": "^1.5.1",
     "extend": "^3.0.0",
+    "nconf": "^0.8.2",
     "qrs": "^1.0.5",
     "qsocks": "^2.1.5",
     "restify": "^4.0.3",

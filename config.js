@@ -1,16 +1,27 @@
 var fs = require('fs');
 
+/**
+ * Location for Qlik Sense certs.
+ * No need to change on a standard Qlik Sense installation
+ */
 var certs = {
-	key: fs.readFileSync('./certs/client_key.pem'),
-	cert: fs.readFileSync('./certs/client.pem'),
-	ca: fs.readFileSync('./certs/root.pem')
+	key: fs.readFileSync('C:/ProgramData/Qlik/Sense/Repository/Exported Certificates/.Local Certificates/client_key.pem'),
+	cert: fs.readFileSync('C:/ProgramData/Qlik/Sense/Repository/Exported Certificates/.Local Certificates/client.pem'),
+	ca: fs.readFileSync('C:/ProgramData/Qlik/Sense/Repository/Exported Certificates/.Local Certificates/root.pem')
 }
 
+/**
+ * Custom Properties used in QMC.
+ */
 var qmcConfig = {
-	blueprintProp: 'Template',
-	childAppProp: 'UseTemplate'
-}
+	blueprintProp: 'Blueprint',
+	childAppProp: 'UseBlueprint'
+};
 
+/**
+ * Qsocks config to connect directly to the QIX Engine
+ * See https://github.com/mindspank/qsocks for more docs
+ */
 var engineconfig = {
 	host: 'usrad-akl.qliktech.com',
 	isSecure: true,
@@ -23,6 +34,10 @@ var engineconfig = {
 	ca: certs.ca
 };
 
+/**
+ * QRS Config to connect directly to QRS.
+ * See https://github.com/stefanwalther/qrs for more docs
+ */
 var qrsconfig = {
 	host: 'usrad-akl.qliktech.com',
 	authentication: 'certificates',
@@ -38,5 +53,6 @@ var qrsconfig = {
 module.exports = {
 	engine: engineconfig,
 	qrs: qrsconfig,
-	qmc: qmcConfig
+	qmc: qmcConfig,
+	cert: certs
 };
