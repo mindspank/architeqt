@@ -45,9 +45,9 @@ var qrsconfig = {
 	port: 4242,
 	headerKey: 'X-Qlik-User',
 	headerValue: 'UserDirectory=Internal;UserId=sa_repository',
-	key: './certs/client_key.pem',
-	cert: './certs/client.pem',
-	ca: './certs/root.pem'
+	key: certs.key,
+	cert: certs.cert,
+	ca: certs.ca
 }
 
 module.exports = {
