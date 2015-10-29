@@ -19,7 +19,9 @@ var server = restify.createServer({
   }
 });
 
-server.server.setTimeout(60000*5);
+// Don't timeout, worst case scenario the full sync could run for a while.
+server.server.setTimeout(0);
+
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
