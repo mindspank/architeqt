@@ -12,18 +12,17 @@ var server = restify.createServer({
   httpsServerOptions: {
     hostname: 'usrad-akl.qliktech.com',
     ca: [config.cert.ca],
-    cert: config.cert.cert,
-    key: config.cert.key,
+    cert: config.cert.server_cert,
+    key: config.cert.server_key,
     rejectUnauthorized: false,
-    requireCertificate: false   
+    requireCertificate: false
   }
 });
 
-
+server.server.setTimeout(60000*5);
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
-
 
 server.get('/', function(req, res, next) {
   res.send('Welcome to Architeqt')
@@ -46,8 +45,8 @@ server.get('/blueprint/:id/children', function (req, res, next) {
      return next();
    })
   })
-  .catch(function(err) {
-    console.log(err)
+  .catch(function(error) {
+    res.send(500, error)
     return next();
   }).done();
 });
@@ -60,9 +59,9 @@ server.post('/sync/full', function (req, res, next) {
     return Promise.each(blueprints, function(blueprint) {
       
       // Fetch associated children
-      return qrs.getBlueprintChildren(blueprint.id).then(function(children) {      
+      return qrs.getBlueprintChildren(blueprint.id).then(function(children) {
         var ids = children.map(function(d) { return d.id }, []);
-        
+  
         // Fetch blueprint definition
         return bp.getBlueprint(blueprint.id, config.engine).then(function(sketch) {
           return bp.applyTo(ids, sketch, config.engine) // Apply blueprint to associated children
@@ -72,12 +71,12 @@ server.post('/sync/full', function (req, res, next) {
     })
           
   }).then(function() {
-    res.send(200, 'success')
+    res.send(200, 'success');
     return next()
   })
-  .catch(function(err) {
-    console.log(err)
-    return next()
+  .catch(function(error) {
+    res.send(500, error)
+    return next();
   }).done();
 });
 
@@ -109,30 +108,54 @@ server.post('/sync/blueprint/:id', function(req, res, next) {
     return next();
   })
   .catch(function(error) {
-    console.log(error)
+    res.send(500, error)
+    return next();
   }).done();
   
 })
 
+server.post('/sync/child/:id', function(req, res, next) {
+  if (!req.params.id) {
+    res.send(400, 'missing child id')
+    return next();
+  }
+  
+  qrs.getBlueprintChildren().then(function(children) { 
+    var child = children.filter(function(d) { return req.params.id === d.id });
+    
+    if(!child.length) {
+      res.send(400, 'App is not using blueprints')
+      return next();      
+    }
+    
+    // Filter list of custom properties and flatten array into blueprint ids
+    var usedBlueprints = child[0].customProperties.filter(function(d) {
+      return d.definition.name === config.qmc.childAppProp;
+    }).map(function(d) {
+      return d.definition.choiceValues;
+    }, []).reduce(function(a, b) {
+      return a.concat(b)
+    });
+    
+    // For each assigned blueprint, apply.
+    return Promise.each(usedBlueprints, function(d) {
+       return bp.getBlueprint(d, config.engine).then(function(sketch) {
+        return bp.applyTo([req.params.id], sketch, config.engine) // Apply blueprint to child
+      })
+    })
 
+  }).then(function() {
+    res.send(200, 'success')
+    return next();
+  })
+  .catch(function(error) {
+    console.log(error)
+    res.send(500, error)
+    return next();
+  }).done();  
+  
+})
 
-server.listen(3001,function () {
+server.listen(3001, function () {
   console.log('%s listening at %s', server.name, server.url);
 });
-
-
-
-
-
-
-/*
-
-bp.getBlueprint('f97c71d8-301c-429a-9992-c0af8044dec4', config.engine)
-.then(function (blueprint) {
-	return bp.applyTo(['87e3b3e0-7afb-40e0-aae3-373ea796cef4'], blueprint, config.engine)
-})
-.catch(function (error) {
-	console.log(error)
-})
-.done()
-*/
