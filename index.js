@@ -88,17 +88,18 @@ server.get('/blueprint/:id/children', function (req, res, next) {
 server.post('/sync/full', function (req, res, next) {
   // Fetch all apps tagged as Blueprints from QMC
   qrs.getBlueprint().then(function(blueprints) {
-    
+
     // Sequentially propogate each Blueprint
     // A little bit slower but ensures we don't update the same child at the same time from multiple blueprints
     return Promise.each(blueprints, function(blueprint) {
-      
+  
       // Fetch associated children
       return qrs.getBlueprintChildren(blueprint.id).then(function(children) {
         var ids = children.map(function(d) { return d.id }, []);
-  
+
         // Fetch blueprint definition
         return bp.getBlueprint(blueprint.id, config.engine).then(function(sketch) {
+          console.log(sketch)
           return bp.applyTo(ids, sketch, config.engine) // Apply blueprint to associated children
         })
         
@@ -144,6 +145,7 @@ server.post('/sync/blueprint/:id', function(req, res, next) {
     return next();
   })
   .catch(function(error) {
+    console.log(error.stack)
     log.error({ err: error }, ' error in /sync/blueprint/:id ');
     res.send(500, error)
     return next();
