@@ -99,7 +99,6 @@ server.post('/sync/full', function (req, res, next) {
 
         // Fetch blueprint definition
         return bp.getBlueprint(blueprint.id, config.engine).then(function(sketch) {
-          console.log(sketch)
           return bp.applyTo(ids, sketch, config.engine) // Apply blueprint to associated children
         })
         
