@@ -1,7 +1,6 @@
 process.env.NODE_PATH = __dirname;
 require('module').Module._initPaths();
 
-var qsocks = require('qsocks');
 var restify = require('restify');
 var Promise = require('bluebird');
 var Logger = require('bunyan');
