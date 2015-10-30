@@ -1,16 +1,35 @@
+process.env.NODE_PATH = __dirname;
+require('module').Module._initPaths();
+
 var qsocks = require('qsocks');
 var restify = require('restify');
 var Promise = require('bluebird');
+var Logger = require('bunyan');
+var path = require('path')
 
 var config = require('./config');
 var bp = require('./lib/blueprint');
 var qrs = require('./lib/qrs-interactions')
 
+var log = new Logger({
+  name: 'architeqt',
+  streams: [
+    {
+      type: 'rotating-file',
+      path: path.resolve(__dirname, 'architeqt.log'),
+      level: 'info',
+      period: '1d',
+      count: 3
+    }
+  ],
+  serializers: restify.bunyan.serializers
+});
+
 var server = restify.createServer({
-  name: 'blueprint',
+  name: 'architeqt',
   version: '1.0.0',
+  log: log,
   httpsServerOptions: {
-    hostname: 'usrad-akl.qliktech.com',
     ca: [config.cert.ca],
     cert: config.cert.server_cert,
     key: config.cert.server_key,
@@ -20,11 +39,21 @@ var server = restify.createServer({
 });
 
 // Don't timeout, worst case scenario the full sync could run for a while.
-server.server.setTimeout(0);
+//server.server.setTimeout(0);
 
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
+server.use(restify.requestLogger());
+
+server.pre(function (request, response, next) {
+  request.log.info({req: request}, 'start');
+  return next();
+});
+
+server.on('after', function (req, res, route) {
+  req.log.info({res: res}, "finished");
+});
 
 server.get('/', function(req, res, next) {
   res.send('Welcome to Architeqt')
@@ -35,8 +64,10 @@ server.get('/blueprint/:id', function (req, res, next) {
   qrs.getBlueprint(req.params.id).then(function(blueprint) {
     res.send(blueprint);
     return next();
-  }, function(err) {
-    res.send(err)
+  }).catch(function(error) {
+    log.error({ err: error }, ' error in /blueprint/:id ');
+    res.send(500, error)
+    return next();
   }).done();
 });
 
@@ -48,6 +79,7 @@ server.get('/blueprint/:id/children', function (req, res, next) {
    })
   })
   .catch(function(error) {
+    log.error({ err: error }, ' error in /blueprint/:id/children ');
     res.send(500, error)
     return next();
   }).done();
@@ -58,6 +90,7 @@ server.post('/sync/full', function (req, res, next) {
   qrs.getBlueprint().then(function(blueprints) {
     
     // Sequentially propogate each Blueprint
+    // A little bit slower but ensures we don't update the same child at the same time from multiple blueprints
     return Promise.each(blueprints, function(blueprint) {
       
       // Fetch associated children
@@ -77,6 +110,7 @@ server.post('/sync/full', function (req, res, next) {
     return next()
   })
   .catch(function(error) {
+    log.error({ err: error }, ' error in /sync/full ');
     res.send(500, error)
     return next();
   }).done();
@@ -110,6 +144,7 @@ server.post('/sync/blueprint/:id', function(req, res, next) {
     return next();
   })
   .catch(function(error) {
+    log.error({ err: error }, ' error in /sync/blueprint/:id ');
     res.send(500, error)
     return next();
   }).done();
@@ -151,13 +186,13 @@ server.post('/sync/child/:id', function(req, res, next) {
     return next();
   })
   .catch(function(error) {
-    console.log(error)
+    log.error({ err: error }, ' error in /sync/child/:id ');
     res.send(500, error)
     return next();
   }).done();  
   
 })
 
-server.listen(3001, function () {
-  console.log('%s listening at %s', server.name, server.url);
+server.listen(3000, function () {
+  log.info({addr: server.address()}, 'listening');
 });
