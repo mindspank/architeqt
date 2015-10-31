@@ -6,11 +6,14 @@ var popover = {
 		$('.spinner').css('display', 'none')		
 	},
 	showSpinner: function() {
+		$('.popover').find('.content').empty()
+		$('.popover').css('display', 'flex')
 		$('.spinner').css('display', 'flex')		
 	},
 	show: function(message) {
+		this.hideSpinner();
 		$('.popover').find('.content').empty()
-		$('.popover').find('p').text(message || 'Loading...')
+		$('.popover .content').append('p').text(message || 'Loading...')
 		$('.popover').css('display', 'flex')
 	},
 	error: function(message) {

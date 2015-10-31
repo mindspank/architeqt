@@ -23,10 +23,10 @@
 	flex: 0 0 auto;
 	align-self: flex-end;
 	outline: none;
-	background: #fff;
+	background: rgb(211, 155, 70);
 	border: 1px solid #333;
 	border-radius: 5px;
-	color: #333;
+	color: #fff;
 	padding: 10px 20px;
 	font-size: 14px;
 	font-weight: bold;
@@ -35,6 +35,7 @@
 }
 .container {
 	display: flex;
+  height: calc(100% - 55px);
 }
 div.container section.blueprints {
 	background: rgb(77, 82, 80);
@@ -52,6 +53,7 @@ div.container section.blueprints {
 }
 #blueprintlist {
 	list-style: none;
+  margin-bottom: 20px;
 }
 #blueprintlist li {
 	line-height: 32px;
@@ -63,8 +65,36 @@ div.container section.blueprints {
 	background: rgb(71, 76, 73);
 }
 #blueprintlist li.active {
-	
+	background: rgb(211, 155, 70);
+  color: #fff;
 }
+
+div.container section.children {
+  flex: 1;
+  height: 100%;
+}
+section.children h2 {
+  padding: 20px;
+}
+section.children #childlist {
+  list-style: none;
+  padding: 20px;
+}
+section.children #childlist button {
+  outline: none;
+  background: rgb(211, 155, 70);
+  color: #fff;
+  font-size: 16px;
+  margin-right: 40px;
+  width: 180px;
+  height: 40px;
+  border: 0;
+  cursor: pointer;
+  margin-top: 80px;
+}
+
+
+
 
 .popover {
   z-index: 1000;
@@ -112,9 +142,10 @@ div.container section.blueprints {
 }
 .popover .pop-content-container .modal button {
   outline: none;
-  background: green;
+  background: rgb(211, 155, 70);
   color: #fff;
   font-size: 16px;
+  margin-right: 40px;
   width: 180px;
   height: 40px;
   border: 0;
@@ -129,4 +160,21 @@ div.container section.blueprints {
 .popover .pop-content-container .modal .error {
   font-size: 22px;
   font-family: 'arial';
+}
+.spinner {
+  height: 200px;
+  flex: 0 0 200px;
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration: 1.5s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -webkit-transform: rotate(360deg);
+}
+@-webkit-keyframes rotate {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
 }

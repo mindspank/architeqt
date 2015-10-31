@@ -19,3 +19,7 @@ Architeqt.prototype.syncChild = function(id) {
 	if(!id) throw new Error('No id');
 	return $.post(this.host + '/sync/child/' + id);
 };
+Architeqt.prototype.removeChildFromBlueprint = function(childId, blueprintId) {
+	if(!blueprintId || !childId) throw new Error('No id');
+	return $.post(this.host + '/child/' + childId + '/remove/' + blueprintId);
+};
