@@ -45,6 +45,14 @@ server.use(restify.queryParser());
 server.use(restify.bodyParser());
 server.use(restify.requestLogger());
 
+server.use(
+  function crossOrigin(req,res,next){
+    res.header("Access-Control-Allow-Origin", "https://usrad-akl.qliktech.com");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    return next();
+  }
+);
+
 server.pre(function (request, response, next) {
   request.log.info({req: request}, 'start');
   return next();
@@ -73,7 +81,7 @@ server.get('/blueprint/:id', function (req, res, next) {
 server.get('/blueprint/:id/children', function (req, res, next) {
   qrs.getBlueprint(req.params.id).then(function(blueprint) {
    qrs.getBlueprintChildren(req.params.id).then(function(children) {
-     res.send([blueprint, children])
+     res.send(200, children)
      return next();
    })
   })
@@ -190,6 +198,21 @@ server.post('/sync/child/:id', function(req, res, next) {
     res.send(500, error)
     return next();
   }).done();  
+})
+
+server.post('/child/:childId/remove/:id', function(req, res, next) {
+  if (!req.params.childId) {
+    res.send(400, 'missing child id')
+    return next();
+  }  
+  if (!req.params.id) {
+    res.send(400, 'missing blueprint id')
+    return next();
+  }
+  
+  bp.removeItemsFromChild(req.params.childId, req.params.id, config.engine).catch(function(error) {
+    console.log(error)
+  })
   
 })
 

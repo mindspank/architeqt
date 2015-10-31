@@ -33,8 +33,8 @@ Modules added to the Service Dispatcher has to be re-applied after an upgrade of
 
 Download this package here: URL TO BE ADDED  
 Extract the zipped package on the Qlik Sense Server.  
-Run the file install.bat to copy the package into C:\Program Files\Qlik\Sense\ServiceDispatcher\Node\architeqt\  
-Then append the following configuration options to C:\Program Files\Qlik\Sense\ServiceDispatcher\services.conf  
+Run the file install.bat to copy the package into ```C:\Program Files\Qlik\Sense\ServiceDispatcher\Node\architeqt\```  
+Then append the following configuration options to ```C:\Program Files\Qlik\Sense\ServiceDispatcher\services.conf```  
 This will let the Service Dispatcher know how to run the module, this step has to be re-applied in a upgrade of Qlik Sense Server.
 
 ```
@@ -50,7 +50,7 @@ Script=Node\architeqt\index.js
 ```
 
 ##Configuration
-The file C:\Program Files\Qlik\Sense\ServiceDispatcher\Node\architeqt\config.js contains configurations for the Architeqt module.  
+The file ```C:\Program Files\Qlik\Sense\ServiceDispatcher\Node\architeqt\config.js``` contains configurations for the Architeqt module.  
 On a out-of-the-box installation of Qlik Sense you would not need to tweak these.  
 
 You can however change the certificate path, Custom Properties used in QMC, Engine connection details and QRS connection details.

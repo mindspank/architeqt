@@ -1,0 +1,34 @@
+<html>
+	<head>
+		<script src="jquery-2.1.4.min.js"></script>
+		<script src="architeqt.js"></script>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<div class="header">
+			<h1>Architeqt</h1>
+			<button id="fullsync">FULL SYNC</button>
+		</div>
+		<div class="container">
+			
+			<section class="blueprints">
+				<h2>BLUEPRINTS</h2>
+				<ul id="blueprintlist"></ul>
+			</section>
+			<section class="children">
+				<h2>Depends on Blueprint</h2>
+				<ul id="childlist"></ul>
+			</section>
+			
+		</div>
+		<div class="popover">
+			<div class="pop-content-container">
+				<div class="modal">
+					<div class="content"></div>
+					<img src="loader.svg" alt="" class="spinner">					
+				</div>				
+			</div>
+		</div>
+		<script src="main.js"></script>
+	</body>
+</html>

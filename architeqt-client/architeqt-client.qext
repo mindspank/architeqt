@@ -1,0 +1,12 @@
+{
+	"type": "mashup",
+	"name": "architect-client",
+	"author": "",
+	"homepage": "",
+	"keywords": "qlik-sense, visualization, mashup",
+	"license": "",
+	"repository": "",
+	"dependencies": {
+		"qlik-sense": ">=1.0.x"
+	}
+}
