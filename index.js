@@ -177,11 +177,9 @@ server.post('/sync/child/:id', function(req, res, next) {
     var usedBlueprints = child[0].customProperties.filter(function(d) {
       return d.definition.name === config.qmc.childAppProp;
     }).map(function(d) {
-      return d.definition.choiceValues;
-    }, []).reduce(function(a, b) {
-      return a.concat(b)
-    });
-    
+      return d.value;
+    }, []);
+            
     // For each assigned blueprint, apply.
     return Promise.each(usedBlueprints, function(d) {
        return bp.getBlueprint(d, config.engine).then(function(sketch) {
@@ -204,11 +202,11 @@ server.post('/child/:childId/remove/:id', function(req, res, next) {
   if (!req.params.childId) {
     res.send(400, 'missing child id')
     return next();
-  }  
+  }; 
   if (!req.params.id) {
     res.send(400, 'missing blueprint id')
     return next();
-  }
+  };
   
   bp.removeItemsFromChild(req.params.childId, req.params.id, config.engine)
   .then(function() {
@@ -224,6 +222,35 @@ server.post('/child/:childId/remove/:id', function(req, res, next) {
     return next();
   })
   
+})
+server.get('/child/full', function(req, res, next) {
+  return qrs.getBlueprintChildren()
+  .then(function(reply) {
+    res.send(200, reply);
+    return next();
+  })
+  .catch(function(error) {
+    log.error({ err: error }, ' /child/full');
+    res.send(500, error)
+    return next();
+  })
+})
+server.get('/child/:id/blueprints', function(req, res, next) {
+  if (!req.params.id) {
+    res.send(400, 'missing blueprint id')
+    return next();
+  };
+
+  return qrs.getBlueprintsForChild(req.params.id)
+  .then(function(reply) {
+    res.send(200, reply);
+    return next();
+  })
+  .catch(function(error) {
+    log.error({ err: error }, ' /child/:childId/remove/:id');
+    res.send(500, error)
+    return next();
+  })
 })
 
 server.listen(3000, function () {

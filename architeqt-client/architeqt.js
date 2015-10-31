@@ -4,6 +4,12 @@ var Architeqt = function(port) {
 Architeqt.prototype.getBlueprint = function(id) {
 	return $.get(this.host + '/blueprint/' + (id ? id : ''))	
 };
+Architeqt.prototype.getChildren = function() {
+	return $.get(this.host + '/child/full')	
+};
+Architeqt.prototype.getBlueprintsForChild = function(id) {
+	return $.get(this.host + '/child/' + id + '/blueprints')	
+};
 Architeqt.prototype.getChildrenOfBlueprint = function(id) {
 	if(!id) throw new Error('No id');
 	return $.get(this.host + '/blueprint/' + id + '/children');
