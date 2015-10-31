@@ -210,8 +210,18 @@ server.post('/child/:childId/remove/:id', function(req, res, next) {
     return next();
   }
   
-  bp.removeItemsFromChild(req.params.childId, req.params.id, config.engine).catch(function(error) {
-    console.log(error)
+  bp.removeItemsFromChild(req.params.childId, req.params.id, config.engine)
+  .then(function() {
+    return qrs.removeChildFromBlueprint(req.params.childId, req.params.id)
+  })
+  .then(function(reply) {
+    res.send(200, 'success');
+    return next();
+  })
+  .catch(function(error) {
+    log.error({ err: error }, ' /child/:childId/remove/:id');
+    res.send(500, error)
+    return next();
   })
   
 })
