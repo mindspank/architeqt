@@ -198,26 +198,35 @@ server.post('/sync/child/:id', function(req, res, next) {
   }).done();  
 })
 
-server.post('/child/:childId/remove/:id', function(req, res, next) {
+server.post('/child/:childId/remove', function(req, res, next) {
   if (!req.params.childId) {
     res.send(400, 'missing child id')
     return next();
   }; 
-  if (!req.params.id) {
-    res.send(400, 'missing blueprint id')
+  if (!req.params.blueprintIds) {
+    res.send(400, 'missing blueprint ids')
     return next();
   };
   
-  bp.removeItemsFromChild(req.params.childId, req.params.id, config.engine)
-  .then(function() {
-    return qrs.removeChildFromBlueprint(req.params.childId, req.params.id)
+  // Make sure it's an array and not a string.
+  var blueprintIds = req.params.blueprintIds;
+  if (typeof req.params.blueprintIds === 'string') {
+    blueprintIds = [req.params.blueprintIds]
+  }
+  
+  Promise.each(blueprintIds, function(d) {
+    return bp.removeItemsFromChild(req.params.childId, d, config.engine)
+    .then(function() {
+      return qrs.removeChildFromBlueprint(req.params.childId, d)
+    })   
   })
   .then(function(reply) {
     res.send(200, 'success');
     return next();
   })
   .catch(function(error) {
-    log.error({ err: error }, ' /child/:childId/remove/:id');
+    console.log(error)
+    log.error({ err: error }, ' /child/:childId/remove');
     res.send(500, error)
     return next();
   })
@@ -253,6 +262,19 @@ server.get('/child/:id/blueprints', function(req, res, next) {
   })
 })
 
-server.listen(3000, function () {
+server.get('/apps', function(req, res, next) {
+  qrs.getNonBlueprints()
+  .then(function(reply) {
+     res.send(200, reply);
+     return next();     
+  })
+  .catch(function(error) {
+    log.error({ err: error }, '/apps');
+    res.send(500, error)
+    return next();
+  })
+})
+
+server.listen(config.rest.port, function () {
   log.info({addr: server.address()}, 'listening');
 });

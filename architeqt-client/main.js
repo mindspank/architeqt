@@ -2,24 +2,32 @@
 (function() {
 
 var api = new Architeqt(3000);
-api.getBlueprint().then(function(data) {
-	
-	var html = $(data.map(function(d) {
-		return '<li id="' + d.id + '" class="blueprint">' + d.name + '</li>'
-	}).join('\n'));
-	
-	$('#blueprintlist').empty().append(html);
-});
-api.getChildren().then(function(data) {
-	
-	var html = $(data.map(function(d) {
-		return '<li id="' + d.id + '" class="child">' + d.name + '</li>'
-	}).join('\n'));
-	
-	$('#childrennavlist').empty().append(html);
-});
+populateBlueprintList();
+populateChildrenList();
+
+function populateBlueprintList() {
+	api.getBlueprint().then(function(data) {	
+		var html = $(data.map(function(d) {
+			return '<li id="' + d.id + '" class="blueprint">' + d.name + '</li>'
+		}).join('\n'));
+		
+		$('#blueprintlist').empty().append(html);	
+	});
+}
+
+function populateChildrenList() {
+	api.getChildren().then(function(data) {	
+		var html = $(data.map(function(d) {
+			return '<li id="' + d.id + '" class="child">' + d.name + '</li>'
+		}).join('\n'));
+		
+		$('#childrennavlist').empty().append(html);
+	});	
+};
+
 
 $('#fullsync').on('click', fullSync)
+
 
 $('.blueprints').on('click', 'li', function(e) {
 	var toggle = listToggle(e);
@@ -31,8 +39,6 @@ $('.blueprints').on('click', 'li', function(e) {
 	if($(e.target).hasClass('child')) {
 		fetchBlueprintForChild(e)
 	}
-	
-
 });
 
 function listToggle(e) {
@@ -51,7 +57,7 @@ function listToggle(e) {
 function fetchBlueprintForChild(e) {
 	api.getBlueprintsForChild( e.target.id ).then(function(data) {
 		if(data.length) {
-			$('.children h2').text(e.target.innerHTML + ' inherits from the following Blueprints.');
+			$('.children h2').text(e.target.innerHTML + ' inherits from the following blueprints.');
 			
 			var blueprints = data.reduce(function(a,b) {
 				return a.concat(b)
@@ -59,19 +65,29 @@ function fetchBlueprintForChild(e) {
 				return '<li id="' + d.id + '"><input type="checkbox"></input>' + d.name + '</li>';
 			}).join('\n');
 			
-			var $button = $('<button>').text('Sync Blueprints');
+			var $button = $('<button>').text('Sync all blueprints to app');
 			$button.on('click', function(){
 				api.syncChild(e.target.id)
 			})
 			
-			var $remove = $('<button>').text('Remove selected Blueprints');
-			$button.on('click', function(){
-				var checked = $('input:checked');
-				if(!checked.length) {
+			var $remove = $('<button>').text('Purge selected blueprints from app');
+			$remove.on('click', function(){
+				if(!$('input:checked').length) {
 					return null;
 				}
-				
-				
+				// Beware - jquery map so swapped parameters
+				var blueprintsToPurge = $('input:checked').map(function(i, d) {
+					return $(d).parent().attr('id')
+				});
+				popover.showSpinner()
+				api.removeChildFromBlueprint($('.active').attr('id'), blueprintsToPurge.toArray())
+				.then(function() {
+					$('input:checked').parent().remove();
+					populateChildrenList();
+					popover.hideSpinner();
+					$('.content').append('<h2>Success</h2><p class="subheading">All blueprints has been successfully deleted.')
+					$('.content').append('<button onClick="popover.hide()">Close</button>');
+				})
 				
 			})
 			
@@ -123,9 +139,5 @@ function fullSync() {
 		console.log(error)
 	})
 };
-
-function getCount(msg) {
-	return $('input:checked').length;
-}
 
 }())

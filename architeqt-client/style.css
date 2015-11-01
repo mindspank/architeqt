@@ -8,20 +8,19 @@
 	height: 54px;
 	width: 100%;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-	display: flex;
-	flex-wrap: wrap;
-	flex-direction: column;
-	justify-content: center;
 }
 .header h1 {
 	color: rgb(211, 155, 70);
+  line-height: 54px;
+  float: left;
 	padding-left: 20px;
 	flex: 0 0 auto;
 	align-self: flex-start
 }
 .header button {
-	flex: 0 0 auto;
-	align-self: flex-end;
+  float: right;
+  max-width: 250px;
+  margin-top: 8px;
 	outline: none;
 	background: rgb(211, 155, 70);
 	border: 1px solid #333;
@@ -80,6 +79,9 @@ section.children h2 {
 section.children #childlist {
   list-style: none;
   padding: 20px;
+}
+section.children #childlist li {
+  margin-bottom: 5px;
 }
 section.children #childlist button {
   outline: none;

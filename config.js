@@ -21,6 +21,23 @@ var qmcConfig = {
 };
 
 /**
+ * REST Server Configuration
+ */
+var restserver = {
+	port: 3000,
+	restrictCrossOrigin: true,
+	crossOriginHost: 'usrad-akl.qliktech.com',
+	useHTTPS: true,
+	httpsServerOptions: {
+		ca: [certs.cert.ca],
+		cert: certs.server_cert,
+		key: certs.server_key,
+		rejectUnauthorized: false,
+		requireCertificate: false
+	}
+}
+
+/**
  * Qsocks config to connect directly to the QIX Engine
  * See https://github.com/mindspank/qsocks for more docs
  */
@@ -56,5 +73,6 @@ module.exports = {
 	engine: engineconfig,
 	qrs: qrsconfig,
 	qmc: qmcConfig,
-	cert: certs
+	cert: certs,
+	rest: restserver
 };
