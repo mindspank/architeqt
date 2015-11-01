@@ -37,21 +37,21 @@ var server = restify.createServer({
   }
 });
 
-// Don't timeout, worst case scenario the full sync could run for a while.
-//server.server.setTimeout(0);
-
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
 server.use(restify.requestLogger());
 
-server.use(
-  function crossOrigin(req,res,next){
-    res.header("Access-Control-Allow-Origin", "https://usrad-akl.qliktech.com");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    return next();
-  }
-);
+
+if (config.rest.restrictCrossOrigin) {
+  server.use(
+    function crossOrigin(req,res,next){
+      res.header("Access-Control-Allow-Origin", config.rest.crossOriginHost);
+      res.header("Access-Control-Allow-Headers", "X-Requested-With");
+      return next();
+    }
+  )  
+}
 
 server.pre(function (request, response, next) {
   request.log.info({req: request}, 'start');
@@ -93,6 +93,10 @@ server.get('/blueprint/:id/children', function (req, res, next) {
 });
 
 server.post('/sync/full', function (req, res, next) {
+  
+  // This could take a while, disable standard 2min timeout
+  res.connection.setTimeout(0);
+  
   // Fetch all apps tagged as Blueprints from QMC
   qrs.getBlueprint().then(function(blueprints) {
 
@@ -157,7 +161,7 @@ server.post('/sync/blueprint/:id', function(req, res, next) {
     return next();
   }).done();
   
-})
+});
 
 server.post('/sync/child/:id', function(req, res, next) {
   if (!req.params.id) {
@@ -231,7 +235,8 @@ server.post('/child/:childId/remove', function(req, res, next) {
     return next();
   })
   
-})
+});
+
 server.get('/child/full', function(req, res, next) {
   return qrs.getBlueprintChildren()
   .then(function(reply) {
@@ -243,7 +248,8 @@ server.get('/child/full', function(req, res, next) {
     res.send(500, error)
     return next();
   })
-})
+});
+
 server.get('/child/:id/blueprints', function(req, res, next) {
   if (!req.params.id) {
     res.send(400, 'missing blueprint id')
@@ -260,7 +266,7 @@ server.get('/child/:id/blueprints', function(req, res, next) {
     res.send(500, error)
     return next();
   })
-})
+});
 
 server.get('/apps', function(req, res, next) {
   qrs.getNonBlueprints()
@@ -273,7 +279,7 @@ server.get('/apps', function(req, res, next) {
     res.send(500, error)
     return next();
   })
-})
+});
 
 server.listen(config.rest.port, function () {
   log.info({addr: server.address()}, 'listening');

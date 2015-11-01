@@ -26,7 +26,7 @@ var qmcConfig = {
 var restserver = {
 	port: 3000,
 	restrictCrossOrigin: true,
-	crossOriginHost: 'usrad-akl.qliktech.com',
+	crossOriginHost: 'https://usrad-akl.qliktech.com',
 	useHTTPS: true,
 	httpsServerOptions: {
 		ca: [certs.cert.ca],
