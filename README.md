@@ -31,9 +31,10 @@ Master library are synced to app B, C, D from Blueprint app A.
 Architeqt is a REST API built using NodeJS. It can be hosted and maintained through the Qlik Sense Service Dispatcher.  
 Modules added to the Service Dispatcher has to be re-applied after an upgrade of Qlik Sense.
 
-Download this package here: URL TO BE ADDED  
+Download this package here: https://github.com/mindspank/architeqt/archive/master.zip  
 Extract the zipped package on the Qlik Sense Server.  
-Run the file install.bat to copy the package into ```C:\Program Files\Qlik\Sense\ServiceDispatcher\Node\architeqt\```  
+Run the file install.bat with admin priviliges to copy the package into  
+```C:\Program Files\Qlik\Sense\ServiceDispatcher\Node\architeqt\```  
 Then append the following configuration options to ```C:\Program Files\Qlik\Sense\ServiceDispatcher\services.conf```  
 This will let the Service Dispatcher know how to run the module, this step has to be re-applied in a upgrade of Qlik Sense Server.
 
@@ -48,6 +49,12 @@ Script=Node\architeqt\index.js
 
 [architeqt-service.parameters]
 ```
+
+###Client
+Architeqt also includes a sample client that operates against the REST API. The client allows you to start a sync between either all blueprints and associated children or just a select few children or blurprints.  
+  
+Take the ```architect-client.zip``` and upload as a mashup into Qlik Sense, this provides the added benefit of being able to access control the mashup.
+As the REST API also is secured through cross origin policies as default this should be a added layer of security so users wont accidentially stumble across the management interface.
 
 ##Configuration
 The file ```C:\Program Files\Qlik\Sense\ServiceDispatcher\Node\architeqt\config.js``` contains configurations for the Architeqt module.  
@@ -92,6 +99,13 @@ Performs a sync of specified blueprint ID to associated applications.
   
 POST https://hostname:3000/sync/child/:id  
 Specified application by ID will fetch/sync all associated blueprints.  
+
+GET https://hostname:3000/child/full
+Returns a list of all children/applications depending on blueprints.
+
+POST https://hostname:3000/child/:childId/remove
+BODY array of blueprint IDs
+Removes the child from specified blueprints. This will remove all synced objects from child as well as remove the association to the blueprint in QMC.
   
   
 ## Worried about performance and RAM?  
