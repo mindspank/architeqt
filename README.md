@@ -35,7 +35,8 @@ Download this package here: https://github.com/mindspank/architeqt/archive/maste
 Extract the zipped package on the Qlik Sense Server.  
 Run the file install.bat with admin priviliges to copy the package into  
 ```C:\Program Files\Qlik\Sense\ServiceDispatcher\Node\architeqt\```  
-Then append the following configuration options to ```C:\Program Files\Qlik\Sense\ServiceDispatcher\services.conf```  
+Then append the following configuration options to  
+```C:\Program Files\Qlik\Sense\ServiceDispatcher\services.conf```  
 This will let the Service Dispatcher know how to run the module, this step has to be re-applied in a upgrade of Qlik Sense Server.
 
 ```

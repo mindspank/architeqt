@@ -1,9 +1,36 @@
 /* global $ */
 (function() {
 
+/**
+ * Initial setup and event binding
+ */
+
+// Instaniate the API - sugar for REST endpoints.
 var api = new Architeqt(3000);
+
+// Set up the Blueprint and Children list.
 populateBlueprintList();
 populateChildrenList();
+
+// Initiate full sync
+$('#fullsync').on('click', fullSync);
+
+// Switch view when a blueprint or child is clicked
+$('.blueprints').on('click', 'li', function(e) {
+	var toggle = listToggle(e);
+	if(toggle) return;
+	
+	if($(e.target).hasClass('blueprint')) {
+		fetchBlueprint(e)
+	}
+	if($(e.target).hasClass('child')) {
+		fetchBlueprintForChild(e)
+	}
+});
+
+/** 
+ * End of initial setup and event binding
+ */
 
 function populateBlueprintList() {
 	api.getBlueprint().then(function(data) {	
@@ -24,22 +51,6 @@ function populateChildrenList() {
 		$('#childrennavlist').empty().append(html);
 	});	
 };
-
-
-$('#fullsync').on('click', fullSync)
-
-
-$('.blueprints').on('click', 'li', function(e) {
-	var toggle = listToggle(e);
-	if(toggle) return;
-	
-	if($(e.target).hasClass('blueprint')) {
-		fetchBlueprint(e)
-	}
-	if($(e.target).hasClass('child')) {
-		fetchBlueprintForChild(e)
-	}
-});
 
 function listToggle(e) {
 	if( $(e.target).hasClass('active') ) {
