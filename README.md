@@ -3,6 +3,8 @@
 Architeqt allows you to define Qlik Sense application as Blueprints.  
 Other Qlik Sense apps can inherit properties from one or multiple Blueprints.  
 
+Introduction video: https://www.youtube.com/watch?v=LBelK5Vb7b8
+
 Example
 ```
 App 1 contains a generic story that explains how to use Qlik Sense, App 1 is marked as a blueprint.
