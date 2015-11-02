@@ -31,11 +31,14 @@ Master library are synced to app B, C, D from Blueprint app A.
 Architeqt is a REST API built using NodeJS. It can be hosted and maintained through the Qlik Sense Service Dispatcher.  
 Modules added to the Service Dispatcher has to be re-applied after an upgrade of Qlik Sense.
 
-Download this package here: https://github.com/mindspank/architeqt/archive/master.zip  
-Extract the zipped package on the Qlik Sense Server.  
-Run the file install.bat with admin priviliges to copy the package into  
+* Download this package here: https://github.com/mindspank/architeqt/archive/master.zip  
+  
+* Extract the zipped package on the Qlik Sense Server.  
+* Run the file install.bat with admin priviliges to copy the package into  
 ```C:\Program Files\Qlik\Sense\ServiceDispatcher\Node\architeqt\```  
-Then append the following configuration options to  
+You can also copy the files manually if you wish to do so.  
+
+* Then append the following configuration options to  
 ```C:\Program Files\Qlik\Sense\ServiceDispatcher\services.conf```  
 This will let the Service Dispatcher know how to run the module, this step has to be re-applied in a upgrade of Qlik Sense Server.
 
@@ -51,10 +54,18 @@ Script=Node\architeqt\index.js
 [architeqt-service.parameters]
 ```
 
+* Open the config.js file in the architeqt folder in ```C:\Program Files\Qlik\Sense\ServiceDispatcher\Node\architeqt\``` and change the hostname to match your installation.  
+The Engine and QRS configuration depends on the Qlik Sense server host and the REST API config is the external hostname.
+
+* Restart the Qlik Sense Service Dispatcher windows service to pick up the new module.
+
+* Lastly, add 2 custom properties in QMC. The default names are Blueprint with a value 'true' and UseBlueprint.  
+Useblueprint will have values that corresponds with the IDs of the apps you have defined as Blueprints. See the QMC section below.
+
 ###Client
 Architeqt also includes a sample client that operates against the REST API. The client allows you to start a sync between either all blueprints and associated children or just a select few children or blurprints.  
   
-Take the ```architect-client.zip``` and upload as a mashup into Qlik Sense, this provides the added benefit of being able to access control the mashup.
+Zip the ```architect-client``` folder and upload as a mashup into Qlik Sense, this provides the added benefit of being able to access control the mashup.
 As the REST API also is secured through cross origin policies as default this should be a added layer of security so users wont accidentially stumble across the management interface.
 
 ##Configuration
