@@ -118,10 +118,28 @@ GET https://hostname:3000/child/full
 Returns a list of all children/applications depending on blueprints.
 
 POST https://hostname:3000/child/:childId/remove  
-BODY array of blueprint IDs
+BODY array of blueprint IDs  
 Removes the child from specified blueprints. This will remove all synced objects from child as well as remove the association to the blueprint in QMC.
   
   
 ## Worried about performance and RAM?  
 Architeqt only loads the objects and NO data into RAM during sync to reduce the footprint.  
 This means you are able to propogate a sync even during production hours.
+
+##FAQ  
+
+**What if I have a custom certificate for external access?**  
+You still use the internal server name and the generated certs for the QRS and Engine config.  
+FOr the REST API you would use your external cert and hostname.  
+
+**I'm worried about security**  
+You can add another layer of security on top of the REST if you wish to do so.  
+However the REST is only capable of removing synced blueprint items so the worst thing a malicious hacker could do is to remove your blueprints from Apps. Track the hacker down through the logs, give him/her a spanking and then apply the blueprints again :)
+
+**I hate the client**  
+Good! You can build your own using the supplied REST API.  
+If you do, feel free to contribute it back!  
+
+**I found a bug**  
+Open a issue here on Github with as much details as possible.  
+If you are inclined feel free to fork the repo, fix the issue and submit a pull request.
