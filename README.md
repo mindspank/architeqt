@@ -117,7 +117,7 @@ Specified application by ID will fetch/sync all associated blueprints.
 GET https://hostname:3000/child/full
 Returns a list of all children/applications depending on blueprints.
 
-POST https://hostname:3000/child/:childId/remove
+POST https://hostname:3000/child/:childId/remove  
 BODY array of blueprint IDs
 Removes the child from specified blueprints. This will remove all synced objects from child as well as remove the association to the blueprint in QMC.
   
