@@ -1,5 +1,5 @@
 var Architeqt = function(port) {
-	this.host = 'https://' + window.location.hostname + ':' + port;
+	this.host = window.location.protocol + '//' + window.location.hostname + ':' + port;
 };
 Architeqt.prototype.getBlueprint = function(id) {
 	return $.get(this.host + '/blueprint/' + (id ? id : ''))	

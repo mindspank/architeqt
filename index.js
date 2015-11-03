@@ -24,18 +24,27 @@ var log = new Logger({
   serializers: restify.bunyan.serializers
 });
 
-var server = restify.createServer({
-  name: 'architeqt',
-  version: '1.0.0',
-  log: log,
-  httpsServerOptions: {
-    ca: [config.cert.ca],
-    cert: config.cert.server_cert,
-    key: config.cert.server_key,
-    rejectUnauthorized: false,
-    requireCertificate: false
-  }
-});
+var server;
+if (config.rest.useHTTPS) {
+  server = restify.createServer({
+    name: 'architeqt',
+    version: '1.0.0',
+    log: log,
+    httpsServerOptions: {
+      ca: [config.cert.ca],
+      cert: config.cert.server_cert,
+      key: config.cert.server_key,
+      rejectUnauthorized: false,
+      requireCertificate: false
+    }
+  })
+} else {
+  server = restify.createServer({
+    name: 'architeqt',
+    version: '1.0.0',
+    log: log
+  });
+};
 
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());

@@ -66,7 +66,8 @@ Useblueprint will have values that corresponds with the IDs of the apps you have
 
 ###Client
 Architeqt also includes a sample client that operates against the REST API. The client allows you to start a sync between either all blueprints and associated children or just a select few children or blurprints.  
-  
+Note: If you changed the port for the REST api then you need to edit the file main.js for the client and specify your custom port.  
+
 Zip the ```architect-client``` folder and upload as a mashup into Qlik Sense, this provides the added benefit of being able to access control the mashup.
 As the REST API also is secured through cross origin policies as default this should be a added layer of security so users wont accidentially stumble across the management interface.
 

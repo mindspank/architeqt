@@ -6,6 +6,7 @@
  */
 
 // Instaniate the API - sugar for REST endpoints.
+// Supply port, if changed from default config change the port below to correspond to your settings.
 var api = new Architeqt(3000);
 
 // Set up the Blueprint and Children list.

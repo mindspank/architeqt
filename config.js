@@ -40,6 +40,7 @@ var restserver = {
 /**
  * Qsocks config to connect directly to the QIX Engine
  * See https://github.com/mindspank/qsocks for more docs
+ * IMPORTANT: This is the hostname QlikSense services uses, the one that was supplied during installation.
  */
 var engineconfig = {
 	host: 'usrad-akl.qliktech.com',
@@ -56,6 +57,7 @@ var engineconfig = {
 /**
  * QRS Config to connect directly to QRS.
  * See https://github.com/stefanwalther/qrs for more docs
+ * IMPORTANT: This is the hostname QlikSense services uses, the one that was supplied during installation.
  */
 var qrsconfig = {
 	host: 'usrad-akl.qliktech.com',
