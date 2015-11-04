@@ -78,8 +78,17 @@ function fetchBlueprintForChild(e) {
 			}).join('\n');
 			
 			var $button = $('<button>').text('Sync all blueprints to app');
-			$button.on('click', function(){
-				api.syncChild(e.target.id)
+			$button.on('click', function() {
+				popover.showSpinner();
+				api.syncChild(e.target.id).then(function(data) {
+					popover.hideSpinner();
+					$('.content').append('<h2>Success</h2><p class="subheading">The blueprint has been successfully synced to it\'s children.')
+					$('.content').append('<button onClick="popover.hide()">Close</button>');					
+				}).fail(function(error) {
+					popover.hideSpinner();
+					$('.content').append('<h2>Failure</h2><p class="subheading">Something went wrong during sync.<br>Please review the server logs.')
+					$('.content').append('<button onClick="popover.hide()">Close</button>');
+				})
 			})
 			
 			var $remove = $('<button>').text('Purge selected blueprints from app');
@@ -99,17 +108,19 @@ function fetchBlueprintForChild(e) {
 					popover.hideSpinner();
 					$('.content').append('<h2>Success</h2><p class="subheading">All blueprints has been successfully deleted.')
 					$('.content').append('<button onClick="popover.hide()">Close</button>');
+				}).fail(function(error) {
+					popover.hideSpinner();
+					$('.content').append('<h2>Failure</h2><p class="subheading">Something went wrong during THE PURGE.<br>Please review the server logs.')
+					$('.content').append('<button onClick="popover.hide()">Close</button>');
 				})
 				
 			})
 			
 			$('#childlist').empty().append( $(blueprints) ).append($button).append($remove);
 		
-		} else {
-			
-		}		
+		}	
 	})
-}
+};
 
 function fetchBlueprint(e) {
 	api.getChildrenOfBlueprint( e.target.id ).then(function(data) {
@@ -121,9 +132,16 @@ function fetchBlueprint(e) {
 			}).join('\n'));
 			
 			var $button = $('<button>Sync Blueprint</button>');
-			$button.on('click', function(){
+			$button.on('click', function() {
+				popover.showSpinner()
 				api.syncBlueprint($('.active').attr('id')).then(function() {
-					$('#childlist').append('<h2>Sync Successful</h2>');
+					popover.hideSpinner();
+					$('.content').append('<h2>Success</h2><p class="subheading">The blueprint has been successfully synced.')
+					$('.content').append('<button onClick="popover.hide()">Close</button>');
+				}).fail(function(error) {
+					popover.hideSpinner();
+					$('.content').append('<h2>Failure</h2><p class="subheading">Something went wrong during sync.<br>Please review the server logs.')
+					$('.content').append('<button onClick="popover.hide()">Close</button>');
 				})
 			})
 			
