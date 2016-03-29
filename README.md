@@ -131,7 +131,7 @@ This means you are able to propogate a sync even during production hours.
 
 **What if I have a custom certificate for external access?**  
 You still use the internal server name and the generated certs for the QRS and Engine config.  
-FOr the REST API you would use your external cert and hostname.  
+For the REST API you would use your external cert and hostname.  
 
 **I'm worried about security**  
 You can add another layer of security on top of the REST if you wish to do so.  
@@ -143,4 +143,7 @@ If you do, feel free to contribute it back!
 
 **I found a bug**  
 Open a issue here on Github with as much details as possible.  
-If you are inclined feel free to fork the repo, fix the issue and submit a pull request.
+If you are inclined feel free to fork the repo, fix the issue and submit a pull request.  
+  
+**I want to exlude some sheets from syncing in my blueprints**  
+Include the word EXCLUDE (in uppercase) in the sheet title and the sheet will be excluded from sync.
