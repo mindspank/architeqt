@@ -130,6 +130,7 @@ server.post('/sync/full', function (req, res, next) {
     return next()
   })
   .catch(function(error) {
+    console.log(error);
     log.error({ err: error }, ' error in /sync/full ');
     res.send(500, error)
     return next();
@@ -155,7 +156,7 @@ server.post('/sync/blueprint/:id', function(req, res, next) {
       // Fetch blueprint definition
       return bp.getBlueprint(req.params.id, config.engine).then(function(sketch) {
         return bp.applyTo(ids, sketch, config.engine) // Apply blueprint to associated children
-      })   
+      })
     
     })
   })
@@ -238,7 +239,6 @@ server.post('/child/:childId/remove', function(req, res, next) {
     return next();
   })
   .catch(function(error) {
-    console.log(error)
     log.error({ err: error }, ' /child/:childId/remove');
     res.send(500, error)
     return next();
