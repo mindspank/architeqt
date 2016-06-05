@@ -152,7 +152,6 @@ server.post('/sync/blueprint/:id', function(req, res, next) {
     // Fetch associated children
     return qrs.getBlueprintChildren(req.params.id).then(function(children) {      
       var ids = children.map(function(d) { return d.id }, []);
-      
       // Fetch blueprint definition
       return bp.getBlueprint(req.params.id, config.engine).then(function(sketch) {
         return bp.applyTo(ids, sketch, config.engine) // Apply blueprint to associated children

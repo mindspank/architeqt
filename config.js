@@ -21,12 +21,20 @@ var qmcConfig = {
 };
 
 /**
+ * Architeqt settings
+ */
+var architeqtconfig = {
+	promoteBlueprintSheets: true,
+	excludePrefix: 'EXCLUDE'
+}
+
+/**
  * REST Server Configuration
  */
 var restserver = {
 	port: 3000,
 	restrictCrossOrigin: true,
-	crossOriginHost: 'https://usrad-akl.qliktech.com',
+	crossOriginHost: 'https://localhost',
 	useHTTPS: true,
 	httpsServerOptions: {
 		ca: [certs.cert.ca],
@@ -43,7 +51,7 @@ var restserver = {
  * IMPORTANT: This is the hostname QlikSense services uses, the one that was supplied during installation.
  */
 var engineconfig = {
-	host: 'usrad-akl.qliktech.com',
+	host: 'localhost',
 	isSecure: true,
 	port: '4747',
 	headers: {
@@ -60,7 +68,7 @@ var engineconfig = {
  * IMPORTANT: This is the hostname QlikSense services uses, the one that was supplied during installation.
  */
 var qrsconfig = {
-	host: 'usrad-akl.qliktech.com',
+	host: 'localhost',
 	authentication: 'certificates',
 	useSSL: true,
 	port: 4242,
@@ -73,6 +81,7 @@ var qrsconfig = {
 
 module.exports = {
 	engine: engineconfig,
+	architeqt: architeqtconfig,
 	qrs: qrsconfig,
 	qmc: qmcConfig,
 	cert: certs,
