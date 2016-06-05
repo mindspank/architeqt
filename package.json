@@ -1,6 +1,6 @@
 {
   "name": "architeqt",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,6 +15,6 @@
     "qrs": "^1.0.5",
     "qsocks": "^2.2.3",
     "restify": "^4.0.3",
-    "serializeapp": "^1.0.3"
+    "serializeapp": "^2.0.0"
   }
 }

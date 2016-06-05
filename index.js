@@ -164,7 +164,6 @@ server.post('/sync/blueprint/:id', function(req, res, next) {
     return next();
   })
   .catch(function(error) {
-    console.log(error.stack)
     log.error({ err: error }, ' error in /sync/blueprint/:id ');
     res.send(500, error)
     return next();
