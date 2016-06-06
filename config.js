@@ -34,6 +34,7 @@ var architeqtconfig = {
 var restserver = {
 	port: 3000,
 	restrictCrossOrigin: true,
+	hostClientUI: true,
 	crossOriginHost: 'https://localhost',
 	useHTTPS: true,
 	httpsServerOptions: {
