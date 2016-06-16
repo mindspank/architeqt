@@ -135,7 +135,6 @@ server.post('/sync/full', function (req, res, next) {
     return next()
   })
     .catch(function (error) {
-      console.log(error);
       log.error({ err: error }, ' error in /sync/full ');
       res.send(500, error)
       return next();
